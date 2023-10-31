@@ -5,10 +5,13 @@
 ### Create a new branch to commit onto and push the branch to contribute.
 
 ## How to run
-if using docker with compose plugin, type
 
-```docker compose up```
+1) Create couchdb_config.ini file with the contents of admin username and password.
 
-if using docker-compose, type
+2) if using docker with compose plugin, type
 
-```docker-compose up```
+    ```docker compose up```
+
+    if using docker-compose, type
+
+    ```docker-compose up```
