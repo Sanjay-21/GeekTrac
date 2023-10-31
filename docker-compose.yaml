@@ -1,0 +1,9 @@
+version: "3"
+services:
+  couchdb:
+    image: apache/couchdb
+    volumes:
+      - ./couchdb_data:/opt/couchdb/data
+      - ./couchdb_config.ini:/opt/couchdb/etc/local.ini
+    ports:
+      - 5984:5984
