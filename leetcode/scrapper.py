@@ -23,7 +23,7 @@ def initialze():
         url = query_url,
         json = payload,
         headers = {
-            'referer': base_url
+            'referer': base_url + '/' + username
         }
     )
 
@@ -53,9 +53,13 @@ def questions_solved_count(username: str):
             """
         }
 
-    response = requests.post(url = query_url, 
-                            json = payload,
-                            headers = { 'referer': base_url })
+    response = requests.post(
+        url = query_url, 
+        json = payload,
+        headers = {
+            'referer': base_url + '/' + username
+        }
+    )
 
     assert( response.status_code == 200 )
 
@@ -86,9 +90,13 @@ def contributions(username: str):
             """
         }
 
-    response = requests.post(url = query_url, 
-                            json = payload,
-                            headers = { 'referer': base_url })
+    response = requests.post(
+        url = query_url,
+        json = payload,
+        headers = {
+            'referer': base_url + '/' + username
+        }
+    )
 
     assert( response.status_code == 200 )
 
@@ -117,9 +125,13 @@ def profile(username: str):
             """
         }
 
-    response = requests.post(url = query_url, 
-                            json = payload,
-                            headers = { 'referer': base_url })
+    response = requests.post(
+        url = query_url,
+        json = payload,
+        headers = {
+            'referer': base_url + '/' + username
+        }
+    )
 
     assert( response.status_code == 200 )
 
@@ -152,9 +164,13 @@ def total_submissions(username: str):
             """
         }
 
-    response = requests.post(url = query_url, 
-                            json = payload,
-                            headers = { 'referer': base_url })
+    response = requests.post(
+        url = query_url,
+        json = payload,
+        headers = {
+            'referer': base_url + '/' + username
+        }
+    )
 
     assert( response.status_code == 200 )
 
@@ -165,3 +181,58 @@ def total_submissions(username: str):
 
     submission_stats = response_data['data']['matchedUser']['submitStats']['totalSubmissionNum']
     return submission_stats
+
+
+
+
+def search_question_by_name(question_name: str, skip : int = 0, limit : int = 50):
+    payload = {
+            "variables": {
+                "categorySlug": "",
+                "limit": limit,
+                "skip": skip,
+                "filters": {
+                    "searchKeywords": question_name,
+                }
+            },
+            "query": """ 
+                query problemsetQuestionList(
+                    $categorySlug: String
+                    $limit: Int
+                    $skip: Int
+                    $filters: QuestionListFilterInput
+                ) {
+                    problemsetQuestionList: questionList(
+                    categorySlug: $categorySlug
+                    limit: $limit
+                    skip: $skip
+                    filters: $filters
+                    ) {
+                        total: totalNum
+                        questions: data {
+                        difficulty
+                        title
+                    }
+                }
+            }
+            """
+        }
+
+    response = requests.post(
+        url = query_url,
+        json = payload,
+        headers = {
+            'referer': base_url + '/problemset/all'
+        }
+    )
+
+    assert( response.status_code == 200 )
+
+    response_data = response.json()
+    if 'errors' in response_data:
+        print(response_data['errors'], file=sys.stderr)
+        return dict()
+
+    submission_stats = response_data['data']['problemsetQuestionList']
+    return submission_stats
+
