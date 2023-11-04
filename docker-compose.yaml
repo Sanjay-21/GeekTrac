@@ -14,3 +14,12 @@ services:
       - ./leetcode:/app/leetcode
     environment:
       PORT: 1006
+  
+  geektrac:
+    build:  ./geektrac
+    volumes:
+      - ./geektrac:/app/geektrac
+    environment:
+      PORT: 5000
+    ports:
+      - 5000:5000
