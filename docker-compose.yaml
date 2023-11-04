@@ -7,3 +7,10 @@ services:
       - ./couchdb_config.ini:/opt/couchdb/etc/local.ini
     ports:
       - 5984:5984
+  
+  leetcode:
+    build:  ./leetcode
+    volumes:
+      - ./leetcode:/app/leetcode
+    environment:
+      PORT: 1006
