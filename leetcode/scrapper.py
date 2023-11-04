@@ -7,7 +7,7 @@ base_url = 'https://leetcode.com'
 query_url = 'https://leetcode.com/graphql'
 
 
-def initialze():
+def initialize():
     payload = {
         "query": """
         {
@@ -23,7 +23,7 @@ def initialze():
         url = query_url,
         json = payload,
         headers = {
-            'referer': base_url + '/' + username
+            'referer': base_url
         }
     )
 

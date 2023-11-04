@@ -1,2 +1,4 @@
 couchdb_data/**
 couchdb_config.ini
+**/venv/**
+**/__pycache__/**
