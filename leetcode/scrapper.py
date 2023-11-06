@@ -1,6 +1,8 @@
 import requests
 import sys
 
+from leetcode.db import save_stat
+
 platform = 'leetcode'
 base_url = 'https://leetcode.com'
 
@@ -38,7 +40,7 @@ def questions_solved_count(username: str):
             "variables": {
                 "username": username
             },
-            "query": """ 
+            "query": """ statname
             query getUserProfile($username: String!) {
                 matchedUser(username: $username) {
                     submitStats {
@@ -69,6 +71,9 @@ def questions_solved_count(username: str):
         return dict()
 
     submission_stats = response_data['data']['matchedUser']['submitStats']['acSubmissionNum']
+
+    save_stat(username, {'submission': submission_stats})
+
     return submission_stats
 
 
@@ -105,8 +110,11 @@ def contributions(username: str):
         print(response_data['errors'], file=sys.stderr)
         return dict()
 
-    submission_stats = response_data['data']['matchedUser']['contributions']
-    return submission_stats
+    contribution_stats = response_data['data']['matchedUser']['contributions']
+
+    save_stat(username, {'contribution': contribution_stats})
+    
+    return contribution_stats
 
 def profile(username: str):
     payload = {
@@ -140,8 +148,11 @@ def profile(username: str):
         print(response_data['errors'], file=sys.stderr)
         return dict()
 
-    submission_stats = response_data['data']['matchedUser']['profile']
-    return submission_stats
+    profile_stat = response_data['data']['matchedUser']['profile']
+
+    save_stat(username, {'profile': profile_stat})
+
+    return profile_stat
 
 
 def total_submissions(username: str):
@@ -179,8 +190,11 @@ def total_submissions(username: str):
         print(response_data['errors'], file=sys.stderr)
         return dict()
 
-    submission_stats = response_data['data']['matchedUser']['submitStats']['totalSubmissionNum']
-    return submission_stats
+    total_submissions_stat = response_data['data']['matchedUser']['submitStats']['totalSubmissionNum']
+
+    save_stat(username, {'total_submission': total_submissions_stat})
+
+    return total_submissions_stat
 
 
 
