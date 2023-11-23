@@ -30,8 +30,8 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if "Authorization" in request.headers:
-                token = request.headers["Authorization"].split(" ")[1]
+        if "Authorization" in request.cookies:
+                token = request.cookies.get("Authorization")
         if not token:
             return {
                 "message": "Authentication Token is missing!",
@@ -55,3 +55,17 @@ def token_required(f):
         return f(token_data, *args, **kwargs)
     
     return decorated
+
+from xmlrpc.client import Server
+leetcode_handle = None
+
+def get_leetcode_handle():
+    global leetcode_handle
+    
+    leetcode_handle = Server('http://leetcode:1006/')
+    while True:
+        try:
+            couchserver.version()
+            break
+        except ConnectionRefusedError:
+            pass

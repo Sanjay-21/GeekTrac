@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, make_response, render_template
 from werkzeug.security import generate_password_hash
 from geektrac.db import get_db_handler, check_if_user_exists, check_user_passwd, insert_user_to_db
 
@@ -10,6 +10,8 @@ import jwt
 dbhandle = get_db_handler()
 
 user_creation = Blueprint('user_creation', __name__, url_prefix = '/user')
+user_detail = Blueprint('user_detail', __name__, url_prefix = '/')
+
 
 @user_creation.route('/create', methods = ['GET'])
 def user_creation_form():
@@ -57,7 +59,11 @@ def user_login():
     if not check_user_passwd(username, password):
         return "invalid user details", 403
     
-    return generate_jwt(username)
+    jwtToken = generate_jwt(username)
+    resp = make_response()  
+    resp.set_cookie('Authorization', jwtToken, secure=True, httponly=True) 
+
+    return resp
 
 def generate_jwt(username):
     jwt_token = jwt.encode({
@@ -69,10 +75,15 @@ def generate_jwt(username):
 
 @user_creation.route('/login', methods = ['GET'])
 def user_login_form():
-    return ""
+    return render_template('basic_login.html')
 
+@user_creation.route('/logout', methods = ['GET'])
+@token_required
+def logout(token_data):
+    resp = make_response()
+    resp.set_cookie('Authorization', '', secure=True, httponly=True)
 
-user_detail = Blueprint('user_detail', __name__, url_prefix = '/')
+    return resp
 
 @user_detail.route('/ping', methods = ['GET'])
 @token_required
@@ -84,6 +95,17 @@ def ping(token_data):
 @user_detail.route('/leetcode', methods = ['GET'])
 @token_required
 def leetcode_stats(token_data):
-    return {
-        
-    }
+    return view_stat(token_data['username'], 'leetcode')
+
+def view_stat(username, platform):
+    if not dbhandle:
+        get_db_handler()
+    
+    if platform == 'leetcode':
+        leetcode_stats = list(dbhandle.view('userdetails/leetcode_stat', key = username))
+    
+    if len(leetcode_stats) <= 0:
+        return {}
+
+    return leetcode_stats[0]['value']
+
