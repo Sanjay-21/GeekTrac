@@ -28,14 +28,14 @@ const form = document.getElementById('form1');
 const signupusername = document.getElementById('signupusername');
 const signupemail = document.getElementById('signupemail');
 
-form.addEventListener('submit', function(e){
-    e.preventDefault();
+// form.addEventListener('submit', function(e){
+//     e.preventDefault();
 
-    const signupusernameValue = signupusername.value;
-    const signupemailValue = signupemail.value;
+//     const signupusernameValue = signupusername.value;
+//     const signupemailValue = signupemail.value;
 
-    localStorage.setItem('signupusername', signupusernameValue);
-    localStorage.setItem('signupemail', signupemailValue);
+//     localStorage.setItem('signupusername', signupusernameValue);
+//     localStorage.setItem('signupemail', signupemailValue);
 
-    window.location.href="uploadimage.html";
-})
+//     window.location.href="uploadimage.html";
+// })

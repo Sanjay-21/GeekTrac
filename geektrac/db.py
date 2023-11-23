@@ -60,13 +60,14 @@ def check_user_passwd(username, password):
 
     return True
 
-def insert_user_to_db(username, password):
+def insert_user_to_db(username, password, email):
     if not dbhandle:
         get_db_handler()
     
     doc = {
         'username': username,
         'password': generate_password_hash(password),
+        'email': email,
         'type': 'user/v1'
     }
 

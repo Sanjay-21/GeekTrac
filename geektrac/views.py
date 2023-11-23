@@ -20,7 +20,7 @@ def user_creation_form():
 @user_creation.route('/create', methods = ['POST'])
 def create_user():
     user_form = request.form
-    params_required = ['username', 'password']
+    params_required = ['username', 'password', 'email']
 
     for param in params_required:
         if param in user_form:
@@ -29,13 +29,14 @@ def create_user():
 
     username = user_form['username']
     password = user_form['password']
+    email = user_form['email']
 
     print(username, password)
 
     if check_if_user_exists(username):
         return "username taken", 409
 
-    status = insert_user_to_db(username, password)
+    status = insert_user_to_db(username, password, email)
     if not status:
         return "Server error", 500
     
