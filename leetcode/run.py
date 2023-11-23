@@ -1,4 +1,4 @@
-from leetcode.scrapper import *
+from leetcode.scraper import *
 from xmlrpc.server import SimpleXMLRPCServer
 
 import os
