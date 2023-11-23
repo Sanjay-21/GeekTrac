@@ -17,6 +17,16 @@ services:
     secrets:
       - couchdb_uname
       - couchdb_passwd
+    
+  codechef:
+    build:  ./codechef
+    volumes:
+      - ./codechef:/app/codechef
+    environment:
+      PORT: 1006
+    secrets:
+      - couchdb_uname
+      - couchdb_passwd
   
   geektrac:
     build:  ./geektrac

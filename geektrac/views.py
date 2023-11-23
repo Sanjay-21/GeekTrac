@@ -97,15 +97,26 @@ def ping(token_data):
 def leetcode_stats(token_data):
     return view_stat(token_data['username'], 'leetcode')
 
+@user_detail.route('/codechef', methods = ['GET'])
+@token_required
+def codechef_stats(token_data):
+    return view_stat(token_data['username'], 'codechef')
+
 def view_stat(username, platform):
     if not dbhandle:
         get_db_handler()
     
     if platform == 'leetcode':
-        leetcode_stats = list(dbhandle.view('userdetails/leetcode_stat', key = username))
-    
-    if len(leetcode_stats) <= 0:
-        return {}
+        stats = list(dbhandle.view('userdetails/leetcode_stat', key = username))
+        if len(stats) <= 0:
+            return {}
+        return stats[0]['value']
+        
+    elif platform == 'codechef':
+        stats = list(dbhandle.view('userdetails/codechef_stat', key = username))
+        if len(stats) <= 0:
+            return {}
+        return stats[0]
 
-    return leetcode_stats[0]['value']
+    return {}
 
