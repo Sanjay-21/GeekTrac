@@ -1,8 +1,8 @@
 from flask import Blueprint, request, current_app, make_response, render_template
 from werkzeug.security import generate_password_hash
-from geektrac.db import get_db_handler, check_if_user_exists, check_user_passwd, insert_user_to_db
+from geektrac.db import get_db_handler, check_if_user_exists, check_user_passwd, insert_user_to_db, add_platform_uname_to_db
 
-from geektrac.util import token_required
+from geektrac.util import token_required, leetcode_handle, codechef_handle, get_codechef_handle, get_leetcode_handle
 from datetime import date,datetime, timedelta
 
 import jwt
@@ -121,3 +121,68 @@ def view_stat(username, platform):
 
     return {}
 
+
+@user_detail.route('/platform')
+@token_required
+def add_platform_uname(token_data):
+    user_form = request.form
+    params_required = ['platform', 'username']
+
+    for param in params_required:
+        if param in user_form:
+            continue
+        return f'{param} not found', 400
+
+    platform = user_form['platform']
+    username = user_form['username']
+
+    add_platform_uname_to_db(token_data['username'], platform, username)
+
+    return "username added", 200
+
+
+@user_detail.route('/update', methods = ['POST'])
+@token_required
+def update_platforms(token_data):
+    username = token_data['username']
+
+    user = list(dbhandle.view('userdetails/platform_uname', key=username))
+    if len(user) <= 0:
+        return "add username for platforms", 200
+    
+    user = user[0]['value']
+
+    # if 'platform_uname' not in user:
+    #     return "add username for platforms", 200
+    
+    for platform, uname in user.items():
+        scrap_platform(platform, username)
+    
+    return "Successfully scrapped", 200
+
+
+def scrap_platform(platform, uname):
+#     platforms = {
+#         'codechef': (codechef_handle, get_codechef_handle),
+#         'leetcode': (leetcode_handle, get_leetcode_handle),
+#     }
+
+#     if platform not in platforms:
+#         return ""
+    
+#     handle = platforms[platform]
+#     if handle[0] is None:
+#         handle[1]()
+    
+#     [0].scrap_now(username)
+
+    global leetcode_handle, codechef_handle
+    
+    if platform == 'leetcode':
+        if leetcode_handle is None:
+            leetcode_handle = get_leetcode_handle()
+        leetcode_handle.scrap_now(uname)
+    if platform == 'codechef':
+        if codechef_handle is None:
+            codechef_handle = get_codechef_handle()
+        codechef_handle.scrap_now(uname)

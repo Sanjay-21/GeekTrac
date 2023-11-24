@@ -58,14 +58,28 @@ def token_required(f):
 
 from xmlrpc.client import Server
 leetcode_handle = None
+codechef_handle = None
 
 def get_leetcode_handle():
     global leetcode_handle
     
     leetcode_handle = Server('http://leetcode:1006/')
-    while True:
-        try:
-            couchserver.version()
-            break
-        except ConnectionRefusedError:
-            pass
+    return leetcode_handle
+    # while True:
+    #     try:
+    #         couchserver.version()
+    #         break
+    #     except ConnectionRefusedError:
+    #         pass
+
+def get_codechef_handle():
+    global codechef_handle
+    
+    codechef_handle = Server('http://codechef:1006/')
+    return codechef_handle
+    # while True:
+    #     try:
+    #         couchserver.version()
+    #         break
+    #     except ConnectionRefusedError:
+    #         pass

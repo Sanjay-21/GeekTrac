@@ -40,7 +40,7 @@ def questions_solved_count(username: str):
             "variables": {
                 "username": username
             },
-            "query": """ statname
+            "query": """
             query getUserProfile($username: String!) {
                 matchedUser(username: $username) {
                     submitStats {
@@ -55,12 +55,13 @@ def questions_solved_count(username: str):
             """
         }
 
+
     response = requests.post(
         url = query_url, 
         json = payload,
         headers = {
-            'referer': base_url + '/' + username
-        }
+            'referer': base_url + '/' + username,
+        },
     )
 
     assert( response.status_code == 200 )

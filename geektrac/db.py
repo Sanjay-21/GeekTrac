@@ -74,3 +74,16 @@ def insert_user_to_db(username, password, email):
     dbhandle.save(doc)
 
     return True
+
+def add_platform_uname_to_db(uname, platform, p_uname):
+    if not dbhandle:
+        get_db_handler()
+    
+    user = list(dbhandle.view('userdetails/authentication', key=uname))[0]
+
+    uid = user['id']
+    udata = dbhandle[uid]
+    if 'platform_uname' not in udata:
+        udata['platform_uname'] = dict()
+    udata['platform_uname'][platform] = p_uname
+    dbhandle[uid] = udata
