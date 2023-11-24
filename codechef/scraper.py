@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from lxml import etree
 
+from codechef.db import save_stat, user_to_platform_uname
+
 platform = 'codechef'
 #base_url = 'https://www.codechef.com'
 base_url = 'https://www.codechef.com/users/'
@@ -9,11 +11,18 @@ base_url = 'https://www.codechef.com/users/'
 bsformat = 'html.parser'
 
 
-def scrap_details(query_username):
-    if not query_username:
+def scrap_now(user):
+    if not user:
+        return {}
+
+    p_uname = user_to_platform_uname(user)
+    if not p_uname:
+        return {}
+    
+    if not p_uname:
         return dict()
     
-    query_url = base_url + query_username
+    query_url = base_url + p_uname
 
     page = requests.get(query_url)
     soup = BeautifulSoup(page.text, bsformat)
@@ -38,7 +47,7 @@ def scrap_details(query_username):
     userattrs['contest_count'] = contest_count(dom)
     userattrs['contests'] = get_contests(dom)
 
-    save_stat(username, userattrs)
+    save_stat(p_uname, userattrs)
 
     return userattrs
 

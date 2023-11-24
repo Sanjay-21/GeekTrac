@@ -40,6 +40,8 @@ def save_stat(username, userstat):
     
     stats = list(dbhandle.view('userdetails/codechef', key = username))
 
+    print(stats)
+
     if len(stats) > 0:
         prev_stat = stats[0]['value']
         prev_stat.update( userstat )
@@ -53,3 +55,19 @@ def save_stat(username, userstat):
         dbhandle.save(stat)
 
     return True
+
+platform = 'codechef'
+def user_to_platform_uname(user):
+    if not dbhandle:
+        get_db_handler()
+
+    p_uname = list(dbhandle.view('userdetails/platform_uname', key = user))
+
+    if (len(p_uname) <= 0):
+        return ""
+    
+    p_uname = p_uname[0]['value']
+    if not p_uname:
+        return ""
+        
+    return p_uname.get(platform, "")

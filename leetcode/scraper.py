@@ -1,7 +1,7 @@
 import requests
 import sys
 
-from leetcode.db import save_stat
+from leetcode.db import save_stat, user_to_platform_uname
 
 platform = 'leetcode'
 base_url = 'https://leetcode.com'
@@ -250,3 +250,18 @@ def search_question_by_name(question_name: str, skip : int = 0, limit : int = 50
     submission_stats = response_data['data']['problemsetQuestionList']
     return submission_stats
 
+
+def scrap_now(user):
+    p_uname = user_to_platform_uname(user)
+    print(p_uname)
+    if not p_uname:
+        return {}
+    
+    details = {
+        'submission': questions_solved_count(p_uname),
+        'contribution': contributions(p_uname),
+        'profile': profile(p_uname),
+        'total_submission': total_submissions(p_uname),
+    }
+
+    return details

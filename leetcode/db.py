@@ -38,10 +38,10 @@ def save_stat(username, userstat):
     if not dbhandle:
         get_db_handler()
     
-    leetcode_stats = list(dbhandle.view('userdetails/leetcode', key = username))
+    stats = list(dbhandle.view('userdetails/leetcode', key = username))
 
-    if len(leetcode_stats) > 0:
-        prev_stat = leetcode_stats[0]['value']
+    if len(stats) > 0:
+        prev_stat = stats[0]['value']
         prev_stat.update( userstat )
         userstat = prev_stat
         dbhandle[userstat['_id']] = userstat
@@ -53,3 +53,20 @@ def save_stat(username, userstat):
         dbhandle.save(stat)
 
     return True
+
+
+platform = 'leetcode'
+def user_to_platform_uname(user):
+    if not dbhandle:
+        get_db_handler()
+
+    p_uname = list(dbhandle.view('userdetails/platform_uname', key = user))
+
+    if (len(p_uname) <= 0):
+        return ""
+    
+    p_uname = p_uname[0]['value']
+    if not p_uname:
+        return ""
+        
+    return p_uname.get(platform, "")
