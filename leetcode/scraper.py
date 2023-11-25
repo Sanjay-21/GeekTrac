@@ -265,4 +265,6 @@ def scrap_now(user):
         'total_submission': total_submissions(p_uname),
     }
 
+    save_stat(user, details)
+
     return details
