@@ -1,4 +1,4 @@
-from leetcode.scraper import *
+from codechef.scraper import scrap_now
 from xmlrpc.server import SimpleXMLRPCServer
 
 import os
@@ -12,7 +12,7 @@ port = int(os.environ.get('PORT', fallback_port))
 def serve():
     with SimpleXMLRPCServer((host, port)) as server:
         server.register_introspection_functions()
-        funcs = [ initialize, scrap_now, search_question_by_name]
+        funcs = [ scrap_now ]
         for func in funcs:
             server.register_function(func)
 

@@ -1,6 +1,8 @@
 import requests
 import sys
 
+from leetcode.db import save_stat, user_to_platform_uname
+
 platform = 'leetcode'
 base_url = 'https://leetcode.com'
 
@@ -38,7 +40,7 @@ def questions_solved_count(username: str):
             "variables": {
                 "username": username
             },
-            "query": """ 
+            "query": """
             query getUserProfile($username: String!) {
                 matchedUser(username: $username) {
                     submitStats {
@@ -53,12 +55,13 @@ def questions_solved_count(username: str):
             """
         }
 
+
     response = requests.post(
         url = query_url, 
         json = payload,
         headers = {
-            'referer': base_url + '/' + username
-        }
+            'referer': base_url + '/' + username,
+        },
     )
 
     assert( response.status_code == 200 )
@@ -69,6 +72,9 @@ def questions_solved_count(username: str):
         return dict()
 
     submission_stats = response_data['data']['matchedUser']['submitStats']['acSubmissionNum']
+
+    save_stat(username, {'submission': submission_stats})
+
     return submission_stats
 
 
@@ -105,8 +111,11 @@ def contributions(username: str):
         print(response_data['errors'], file=sys.stderr)
         return dict()
 
-    submission_stats = response_data['data']['matchedUser']['contributions']
-    return submission_stats
+    contribution_stats = response_data['data']['matchedUser']['contributions']
+
+    save_stat(username, {'contribution': contribution_stats})
+    
+    return contribution_stats
 
 def profile(username: str):
     payload = {
@@ -140,8 +149,11 @@ def profile(username: str):
         print(response_data['errors'], file=sys.stderr)
         return dict()
 
-    submission_stats = response_data['data']['matchedUser']['profile']
-    return submission_stats
+    profile_stat = response_data['data']['matchedUser']['profile']
+
+    save_stat(username, {'profile': profile_stat})
+
+    return profile_stat
 
 
 def total_submissions(username: str):
@@ -179,8 +191,11 @@ def total_submissions(username: str):
         print(response_data['errors'], file=sys.stderr)
         return dict()
 
-    submission_stats = response_data['data']['matchedUser']['submitStats']['totalSubmissionNum']
-    return submission_stats
+    total_submissions_stat = response_data['data']['matchedUser']['submitStats']['totalSubmissionNum']
+
+    save_stat(username, {'total_submission': total_submissions_stat})
+
+    return total_submissions_stat
 
 
 
@@ -236,3 +251,18 @@ def search_question_by_name(question_name: str, skip : int = 0, limit : int = 50
     submission_stats = response_data['data']['problemsetQuestionList']
     return submission_stats
 
+
+def scrap_now(user):
+    p_uname = user_to_platform_uname(user)
+    print(p_uname)
+    if not p_uname:
+        return {}
+    
+    details = {
+        'submission': questions_solved_count(p_uname),
+        'contribution': contributions(p_uname),
+        'profile': profile(p_uname),
+        'total_submission': total_submissions(p_uname),
+    }
+
+    return details
