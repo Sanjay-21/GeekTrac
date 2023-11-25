@@ -186,8 +186,9 @@ def update_platform_internal(username):
     
     user = user[0]['value']
 
-    # if 'platform_uname' not in user:
-    #     return "add username for platforms", 200
+
+    if not user or 'platform_uname' not in user:
+        return "add username for platforms", 200
     
     for platform, uname in user.items():
         scrap_platform(platform, username)
