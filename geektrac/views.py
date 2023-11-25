@@ -1,16 +1,23 @@
-from flask import Blueprint, request, current_app, make_response, render_template
+from flask import Blueprint, request, current_app, make_response, render_template, jsonify
 from werkzeug.security import generate_password_hash
 from geektrac.db import get_db_handler, check_if_user_exists, check_user_passwd, insert_user_to_db, add_platform_uname_to_db
 
 from geektrac.util import token_required, leetcode_handle, codechef_handle, get_codechef_handle, get_leetcode_handle
 from datetime import date,datetime, timedelta
 
+from flask_cors import CORS, cross_origin
+
 import jwt
+
+import sys
 
 dbhandle = get_db_handler()
 
 user_creation = Blueprint('user_creation', __name__, url_prefix = '/user')
+CORS(user_creation)
+
 user_detail = Blueprint('user_detail', __name__, url_prefix = '/')
+CORS(user_detail)
 
 
 @user_creation.route('/create', methods = ['GET'])
@@ -52,18 +59,19 @@ def user_login():
     for param in params_required:
         if param in user_form:
             continue
-        return f'{param} not found', 400
+        return { 'error': f'{param} not found' }, 400
 
     username = user_form['username']
     password = user_form['password']
 
+    print(">>>", file = sys.stderr )
+
     if not check_user_passwd(username, password):
+        
         return "invalid user details", 403
     
     jwtToken = generate_jwt(username)
-    resp = make_response()  
-    resp.set_cookie('Authorization', jwtToken, secure=True, httponly=True) 
-
+    resp = make_response(jsonify(jwtToken))
     return resp
 
 def generate_jwt(username):
@@ -76,7 +84,7 @@ def generate_jwt(username):
 
 @user_creation.route('/login', methods = ['GET'])
 def user_login_form():
-    return render_template('basic_login.html')
+    return render_template('login.html')
 
 @user_creation.route('/logout', methods = ['GET'])
 @token_required
@@ -108,16 +116,22 @@ def view_stat(username, platform):
         get_db_handler()
     
     if platform == 'leetcode':
-        stats = list(dbhandle.view('userdetails/leetcode_stat', key = username))
+        p_uname = user_to_platform_uname(username, platform)
+        if not p_uname:
+            return {}
+        stats = list(dbhandle.view('userdetails/leetcode_stat', key = p_uname))
         if len(stats) <= 0:
             return {}
         return stats[0]['value']
         
     elif platform == 'codechef':
-        stats = list(dbhandle.view('userdetails/codechef_stat', key = username))
+        p_uname = user_to_platform_uname(username, platform)
+        if not p_uname:
+            return {}
+        stats = list(dbhandle.view('userdetails/codechef_stat', key = p_uname))
         if len(stats) <= 0:
             return {}
-        return stats[0]
+        return stats[0]['value']
 
     return {}
 
@@ -186,3 +200,20 @@ def scrap_platform(platform, uname):
         if codechef_handle is None:
             codechef_handle = get_codechef_handle()
         codechef_handle.scrap_now(uname)
+
+
+
+def user_to_platform_uname(user, platform):
+    if not dbhandle:
+        get_db_handler()
+
+    p_uname = list(dbhandle.view('userdetails/platform_uname', key = user))
+
+    if (len(p_uname) <= 0):
+        return ""
+    
+    p_uname = p_uname[0]['value']
+    if not p_uname:
+        return ""
+        
+    return p_uname.get(platform, "")

@@ -30,8 +30,8 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        if "Authorization" in request.cookies:
-                token = request.cookies.get("Authorization")
+        if "Authorization" in request.headers:
+                token = request.headers.get("Authorization")
         if not token:
             return {
                 "message": "Authentication Token is missing!",
@@ -50,7 +50,7 @@ def token_required(f):
                 "message": "Something went wrong",
                 "data": None,
                 "error": str(e)
-            }, 500
+            }, 403
         
         return f(token_data, *args, **kwargs)
     

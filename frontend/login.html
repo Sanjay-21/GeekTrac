@@ -15,7 +15,7 @@
             <span class="bg-animate2"></span>
             <div class="form-box login">
                 <h2 class="animation" style="--i:0; --j:21;">Login</h2>
-                <form action="http://localhost:5000/user/login" method="post">
+                <form id="login-form">
                     <div class="input-box animation" style="--i:1; --j:22;">
                         <input type="text" id="login-username" name="username" required>
                         <label>Username</label>
@@ -39,7 +39,7 @@
 
             <div class="form-box register">
                 <h2 class="animation" style="--i:17; --j:0;">Sign Up</h2>
-                <form action="http://localhost:5000/user/create" method="post" id="form1">
+                <form id="signup-form">
                     <div class="input-box animation" style="--i:18; --j:1;">
                         <input type="text" id="signupusername" name="username" required>
                         <label>Username</label>
@@ -67,6 +67,6 @@
             </div>
         </div>
 
-        <script src="script.js"></script>
+        <script type="module" src="login.js"></script>
     </body>
 </html>
