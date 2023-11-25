@@ -1,4 +1,4 @@
-import { url, EPleetcode, EPcodechef, EPupdatestats  } from "./endpoints.js";
+import { url, EPleetcode, EPcodechef, EPupdatestats, EPunames } from "./endpoints.js";
 import { loginL } from "./locations.js";
 const leetcodeStat = document.getElementById("leetcodeStat");
 const codechefStat = document.getElementById("codechefStat");
@@ -55,9 +55,13 @@ refreshButton.addEventListener("click", (e) => {
         }
     });
     asyncCodechef.then((res) => {
-        return res.json();
-    }).then((data) => {
-        console.log(data);
+        if (res.status != 200) {
+            alert('failed to update');
+            return;
+        }
+        
+        get_leetcode_data()
+        get_codechef_data()
         alert('updated');
     });
 
@@ -65,3 +69,26 @@ refreshButton.addEventListener("click", (e) => {
         alert('failed to update');
     });
 })
+
+const pnamesE = document.getElementById("pnames");
+
+function get_unames() {
+    let token = localStorage.getItem("token")
+    let asyncCodechef = fetch(url + EPunames,{
+        method: "GET",
+        headers: {
+            "Authorization": token,
+        }
+    });
+    asyncCodechef.then((res) => {
+        return res.json();
+    }).then((data) => {
+        console.log(data); 
+        alert('fetched unames');
+    });
+
+    asyncCodechef.catch((res) => {
+        alert('failed to fetch unames');
+    });
+};
+get_unames();

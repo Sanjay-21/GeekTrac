@@ -236,3 +236,22 @@ def user_to_platform_uname(user, platform):
         return ""
         
     return p_uname.get(platform, "")
+
+@user_detail.route('/pnames', methods = ['GET'])
+@token_required
+def get_usernames(token_data):
+    if not dbhandle:
+        get_db_handler()
+
+    user = token_data['username']
+
+    p_uname = list(dbhandle.view('userdetails/platform_uname', key = user))
+
+    if (len(p_uname) <= 0):
+        return ""
+    
+    p_uname = p_uname[0]['value']
+    if not p_uname:
+        return {}
+    
+    return p_uname
