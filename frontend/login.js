@@ -66,6 +66,10 @@ loginform.addEventListener("submit", (e) => {
 
     asyncLogin.then(
         (res) => {
+            if (res.status != 200) {
+                console.log(res);
+                return "";
+            }
             return res.json();
         }
     ).then((data) => {
@@ -90,25 +94,30 @@ signupform.addEventListener("submit", (e) => {
         email: inputs["email"].value,
     };
 
-    let asyncSignup = fetch(url + EPlogin, {
-        method: "POST",
-        headers: {
+    const form = new FormData(signupform)
 
-        },
-        body: signupform,
+    let asyncSignup = fetch(url + EPsignup, {
+        method: "POST",
+        body: form,
 
     })
 
     asyncSignup.then(
         (res) => {
-            localStorage.setItem("jwt-token", res.body)
-            window.location.href = dashboardL;
+            if (res.status != 200) {
+                console.log(res);
+            }
+            return res.json();
         }
-    )
+    ).then((data) => {
+        console.log(data)
+        localStorage.setItem("token", data);
+        window.location.href = dashboardL;
+    })
 
     asyncSignup.catch(
         (res) => {
-            alert("login failed");
+            alert("signup failed");
         }
     )
 });

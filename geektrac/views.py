@@ -38,7 +38,7 @@ def create_user():
     password = user_form['password']
     email = user_form['email']
 
-    print(username, password)
+    print(username, password, file=sys.stderr)
 
     if check_if_user_exists(username):
         return "username taken", 409
@@ -47,8 +47,10 @@ def create_user():
     if not status:
         return "Server error", 500
     
-    
-    return "User success fully created", 200
+    jwtToken = generate_jwt(username)
+    resp = make_response(jsonify(jwtToken))
+
+    return resp
 
 
 @user_creation.route('/login', methods = ['POST'])
@@ -72,6 +74,10 @@ def user_login():
     
     jwtToken = generate_jwt(username)
     resp = make_response(jsonify(jwtToken))
+
+    update_platforms({
+        'username': username
+    })
     return resp
 
 def generate_jwt(username):
@@ -136,7 +142,7 @@ def view_stat(username, platform):
     return {}
 
 
-@user_detail.route('/platform')
+@user_detail.route('/platform', methods = ['POST'])
 @token_required
 def add_platform_uname(token_data):
     user_form = request.form
@@ -145,14 +151,14 @@ def add_platform_uname(token_data):
     for param in params_required:
         if param in user_form:
             continue
-        return f'{param} not found', 400
+        return f'{param} not found', 404
 
     platform = user_form['platform']
     username = user_form['username']
 
     add_platform_uname_to_db(token_data['username'], platform, username)
 
-    return "username added", 200
+    return "username added"
 
 
 @user_detail.route('/update', methods = ['POST'])
