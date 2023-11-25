@@ -73,6 +73,10 @@ loginform.addEventListener("submit", (e) => {
             return res.json();
         }
     ).then((data) => {
+        if (data === "") {
+            alert("token not found");
+            return;
+        }
         localStorage.setItem("token", data);
         window.location.href = dashboardL;
     })

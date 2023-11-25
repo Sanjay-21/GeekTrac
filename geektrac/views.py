@@ -66,7 +66,6 @@ def user_login():
     username = user_form['username']
     password = user_form['password']
 
-    print(">>>", file = sys.stderr )
 
     if not check_user_passwd(username, password):
         
@@ -75,9 +74,9 @@ def user_login():
     jwtToken = generate_jwt(username)
     resp = make_response(jsonify(jwtToken))
 
-    update_platforms({
-        'username': username
-    })
+    update_platform_internal(username)
+    
+    print(">>> updated", file = sys.stderr )
     return resp
 
 def generate_jwt(username):
@@ -180,6 +179,18 @@ def update_platforms(token_data):
     
     return "Successfully scrapped", 200
 
+def update_platform_internal(username):
+    user = list(dbhandle.view('userdetails/platform_uname', key=username))
+    if len(user) <= 0:
+        return "add username for platforms", 200
+    
+    user = user[0]['value']
+
+    # if 'platform_uname' not in user:
+    #     return "add username for platforms", 200
+    
+    for platform, uname in user.items():
+        scrap_platform(platform, username)
 
 def scrap_platform(platform, uname):
 #     platforms = {
@@ -201,6 +212,7 @@ def scrap_platform(platform, uname):
     if platform == 'leetcode':
         if leetcode_handle is None:
             leetcode_handle = get_leetcode_handle()
+        print(">> invoking rpc", file=sys.stderr)
         leetcode_handle.scrap_now(uname)
     if platform == 'codechef':
         if codechef_handle is None:
