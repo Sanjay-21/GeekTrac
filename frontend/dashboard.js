@@ -1,4 +1,4 @@
-import { url, EPleetcode, EPcodechef  } from "./endpoints.js";
+import { url, EPleetcode, EPcodechef, EPupdatestats  } from "./endpoints.js";
 import { loginL } from "./locations.js";
 const leetcodeStat = document.getElementById("leetcodeStat");
 const codechefStat = document.getElementById("codechefStat");
@@ -43,3 +43,25 @@ function get_codechef_data() {
 
 get_leetcode_data()
 get_codechef_data() 
+
+const refreshButton = document.getElementById('updatestat');
+
+refreshButton.addEventListener("click", (e) => {
+    let token = localStorage.getItem("token")
+    let asyncCodechef = fetch(url + EPupdatestats,{
+        method: "POST",
+        headers: {
+            "Authorization": token,
+        }
+    });
+    asyncCodechef.then((res) => {
+        return res.json();
+    }).then((data) => {
+        console.log(data);
+        alert('updated');
+    });
+
+    asyncCodechef.catch((res) => {
+        alert('failed to update');
+    });
+})

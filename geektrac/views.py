@@ -171,8 +171,8 @@ def update_platforms(token_data):
     
     user = user[0]['value']
 
-    # if 'platform_uname' not in user:
-    #     return "add username for platforms", 200
+    if not user:
+        return "add username for platforms", 200
     
     for platform, uname in user.items():
         scrap_platform(platform, username)
@@ -187,7 +187,7 @@ def update_platform_internal(username):
     user = user[0]['value']
 
 
-    if not user or 'platform_uname' not in user:
+    if not user:
         return "add username for platforms", 200
     
     for platform, uname in user.items():
