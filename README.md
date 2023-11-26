@@ -7,7 +7,7 @@
 ## How to run
 
 1) Create couchdb_config.ini file with the contents of admin username and password.
-2) Create a secrets directory with the secrets specified on the docker-compose.yaml file ( currently requires
+2) Create a directory named `secret` with the secrets specified on the docker-compose.yaml file ( currently requires
    
        couchdb_passwd.txt - couchdb login password,
    
