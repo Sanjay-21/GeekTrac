@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Geektrac dashboard</title>
+        <link rel="stylesheet" href="dashboardui.css">
+        <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    </head>
+
+    <body id="iau9">
+        
+        <div id="i6po" class="gjs-grid-row">
+        <div id="itjq" class="gjs-grid-column">
+            <div id="iyd2" class="gjs-grid-row">
+            <div id="iffs" class="gjs-grid-column">
+                <div id="it00l" class="gjs-grid-row">
+                <div id="irtfd" class="gjs-grid-column">
+                    <div class="container">
+                        <!-- <nav class="navbar">
+                            <ul class="nav-links">
+                                <li class="nav-link">
+                                    <a href="#">Home</a>
+                                </li>
+                                <li class="nav-link services">
+                                    <a href="#">Platform
+                                        <span class="material-icons dropdown-icon">
+                                            arrow_drop_down
+                                        </span>
+                                    </a>
+                                    <ul class="drop-down">
+                                        <li>Leetcode</li>
+                                        <li>Codechef</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav> -->
+                        <select id="select_platform">
+                            <option value="leetcode" selected>Leetcode</option>
+                            <option value="codechef">Codechef</option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div id="id7x" class="gjs-grid-column"><a id="i1mew" class="gjs-button">diwaakar84</a></div>
+            </div>
+        </div>
+        </div>
+
+        <div class="platform" id="leetcode">    
+            <div id="irz7b" class="gjs-grid-row">
+                <div id="iycz3" class="gjs-grid-column">
+                    <h1 id="irjua" class="gjs-heading">Global Rank : <font color="#2463eb">94692</font>
+                    </h1>
+                </div>
+            </div>
+            <div id="ioyxg" class="gjs-grid-row">
+                <div id="i8w4i" class="gjs-grid-column">
+                    <div id="ilpi3" class="gjs-grid-column-head feature-item">
+                        <h3 id="in9ef" class="gjs-heading">All</h3>
+                        <div id="i8isa" class="text-main-content">464</div>
+                    </div>
+                    <div id="ixzh1" class="gjs-grid-row">
+                        <div class="gjs-grid-column feature-item" id="i2j6qk">
+                            <h3 class="gjs-heading" id="iuwpj1">Easy</h3>
+                            <div class="text-main-content" id="ivhss8">182</div>
+                        </div>
+                        <div id="ic57kq" class="gjs-grid-column feature-item">
+                            <h3 id="ica43q" class="gjs-heading">Medium</h3>
+                            <div id="ickn3f" class="text-main-content">247</div>
+                        </div>
+                        <div id="idv32l" class="gjs-grid-column feature-item">
+                            <h3 id="ieu6p6" class="gjs-heading">Hard</h3>
+                            <div id="izqkf7" class="text-main-content">35</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="platform" id="codechef">    
+            <div id="irz7b" class="gjs-grid-row">
+                <div id="iycz3" class="gjs-grid-column">
+                    <h1 id="irjua" class="gjs-heading">Global Rank : <font color="#2463eb">24630</font>
+                    </h1>
+                </div><br>
+                <div id="iycz3" class="gjs-grid-column">
+                    <h1 id="irjua" class="gjs-heading">Country Rank : <font color="#2463eb">21942</font>
+                    </h1>
+                </div>
+            </div>
+            <div id="ioyxg" class="gjs-grid-row">
+                <div id="i8w4i" class="gjs-grid-column">
+                    <!-- <div id="ilpi3" class="gjs-grid-column-head feature-item">
+                        <h3 id="in9ef" class="gjs-heading">All</h3>
+                        <div id="i8isa" class="text-main-content">464</div>
+                    </div> -->
+                    <div id="ixzh1" class="gjs-grid-row">
+                        <div id="iycz3" class="gjs-grid-column">
+                            <h1 id="irjua" class="gjs-heading">Rating : <font color="#2463eb">1526</font>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function(){
+                $("#select_platform").on('change', function(){
+                    $(".platform").hide();
+                    $("#"+$(this).val()).fadeIn(700);
+                });
+            });
+        </script>
+    </body>
