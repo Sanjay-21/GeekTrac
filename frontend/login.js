@@ -1,5 +1,6 @@
 import { url, EPsignup, EPlogin } from "./endpoints.js";
 import { dashboardL } from "./locations.js"
+import { platformL } from "./locations.js";
 
 
 const wrapper = document.querySelector('.wrapper');
@@ -51,11 +52,11 @@ loginform.addEventListener("submit", (e) => {
     e.preventDefault()
 
     const inputs = loginform.elements;
-    const userinfo = {
-        username: inputs["username"].value,
-        password: inputs["password"].value,
-    };
-
+    // const userinfo = {
+    //     username: inputs["username"].value,
+    //     password: inputs["password"].value,
+    // };
+    localStorage.setItem("username",inputs["username"].value);
     const form = new FormData(loginform)
 
     let asyncLogin = fetch(url + EPlogin, {
@@ -83,6 +84,7 @@ loginform.addEventListener("submit", (e) => {
 
     asyncLogin.catch(
         (res) => {
+            console.log(res)
             alert("login failed");
         }
     )
@@ -97,7 +99,7 @@ signupform.addEventListener("submit", (e) => {
         password: inputs["password"].value,
         email: inputs["email"].value,
     };
-
+    localStorage.setItem("username",inputs["username"].value);
     const form = new FormData(signupform)
 
     let asyncSignup = fetch(url + EPsignup, {
@@ -116,7 +118,7 @@ signupform.addEventListener("submit", (e) => {
     ).then((data) => {
         console.log(data)
         localStorage.setItem("token", data);
-        window.location.href = dashboardL;
+        window.location.href = platformL;
     })
 
     asyncSignup.catch(

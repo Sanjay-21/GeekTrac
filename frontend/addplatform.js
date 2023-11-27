@@ -17,6 +17,7 @@ addPlatformForm.addEventListener("submit", (e) => {
 
     const form = new FormData(addPlatformForm);
     let token = localStorage.getItem("token")
+    console.log(url + EPaddplatform);
     let asyncAddPlatform = fetch(url + EPaddplatform,{
         method: "POST",
         headers: {

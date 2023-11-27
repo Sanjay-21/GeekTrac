@@ -12,7 +12,6 @@ port = int(os.environ.get('PORT', fallback_port))
 
 def create_app():
     app = Flask(__name__)
-
     from geektrac.views import user_creation, user_detail
     app.register_blueprint(user_creation)
     app.register_blueprint(user_detail)

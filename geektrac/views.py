@@ -144,20 +144,25 @@ def view_stat(username, platform):
 @user_detail.route('/platform', methods = ['POST'])
 @token_required
 def add_platform_uname(token_data):
-    user_form = request.form
-    params_required = ['platform', 'username']
+    user_form = request.get_json()
+    #params_required = ['platform', 'username']
 
-    for param in params_required:
-        if param in user_form:
-            continue
-        return f'{param} not found', 404
+    # for param in params_required:
+    #     print(user_form)
+    #     if param in user_form:
+    #         print("Param found : ", end=" : ")
+    #         print(param)
+    #         continue
+    #     return f'{param} not found', 404
 
-    platform = user_form['platform']
-    username = user_form['username']
+    # platform = user_form['platform']
+    # username = user_form['username']
+    if user_form['codechef']:
+        add_platform_uname_to_db(token_data['username'], 'codechef', user_form['codechef'])
+    if user_form['leetcode']:
+        add_platform_uname_to_db(token_data['username'], 'leetcode', user_form['leetcode'])
 
-    add_platform_uname_to_db(token_data['username'], platform, username)
-
-    return "username added"
+    return jsonify({"msg" : "username added"})
 
 
 @user_detail.route('/update', methods = ['POST'])

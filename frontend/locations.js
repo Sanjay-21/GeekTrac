@@ -1,3 +1,3 @@
-export const dashboardL = "/dashboard.html"
+export const dashboardL = "/dashboardui.html"
 export const loginL = "/login.html"
-export const platformL = "/addplatform.html"
+export const platformL = "/platform.html"
